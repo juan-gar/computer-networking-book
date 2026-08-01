@@ -12,8 +12,8 @@ No build step, no framework, no runtime dependencies. One HTML file plus three f
 Live at <https://juan-gar.github.io/computer-networking-book/>.
 
 `.github/workflows/pages.yml` publishes the repo root on every push to `main`, and can
-also be run by hand from the Actions tab. It needs **Settings → Pages → Source: GitHub
-Actions** set once; after that no further setup.
+also be run by hand from the Actions tab. It enables Pages itself on first run
+(`enablement: true`), so there is nothing to set in Settings.
 
 The Open Graph tags in `index.html` carry the absolute Pages URL, since social scrapers
 will not resolve relative ones. If the site moves — a different repo, or a custom
