@@ -24,11 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # enablement turns Pages on (source: Actions) if it is not on already,
-      # so a fresh clone of this repo deploys without a visit to Settings.
+      # Needs Settings → Pages → Source: GitHub Actions, set once by hand.
+      # configure-pages can create the site itself via `enablement: true`, but
+      # only with a PAT — GITHUB_TOKEN gets "Resource not accessible by
+      # integration" on the create call.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
