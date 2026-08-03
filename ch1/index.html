@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 · Computer Networks and the Internet — Study Guide</title>
+<meta name="description" content="An interactive study guide to Chapter 1 of Kurose &amp; Ross, Computer Networking: A Top-Down Approach. Eight sections covering the network edge, the core, delay and throughput, protocol layering, security, and the history of the Internet.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#101619" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#e6e6e0" media="(prefers-color-scheme: light)">
+
+<!-- Social preview. URLs are absolute because scrapers require it; update them
+     if the site ever moves to a different Pages URL or a custom domain. -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Computer Networks and the Internet — Chapter 1 Study Guide">
+<meta property="og:description" content="The edge, the core, delay and throughput, protocol layering, security, and how all of it got here.">
+<meta property="og:image" content="https://juan-gar.github.io/computer-networking-book/ch1/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://juan-gar.github.io/computer-networking-book/ch1/">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23101619'/%3E%3Cpath d='M4 16h24' stroke='%232d3d45' stroke-width='1.5' stroke-dasharray='3 3'/%3E%3Ccircle cx='7' cy='16' r='3' fill='%23cd7f4d'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='none' stroke='%235fae9d' stroke-width='1.5'/%3E%3Ccircle cx='25' cy='16' r='2.5' fill='none' stroke='%235fae9d' stroke-width='1.5'/%3E%3C/svg%3E">
+
+<link rel="preload" href="../fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/newsreader-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Self-hosted variable fonts (Fontsource, SIL OFL 1.1). Latin subset, weight axis only.
+   No third-party requests: the page renders fully offline. */
+@font-face{
+  font-family:"Archivo";
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+  src:url(../fonts/archivo-latin-wght-normal.woff2) format("woff2-variations"),
+      url(../fonts/archivo-latin-wght-normal.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:"Newsreader";
+  font-style:normal;
+  font-weight:200 800;
+  font-display:swap;
+  src:url(../fonts/newsreader-latin-wght-normal.woff2) format("woff2-variations"),
+      url(../fonts/newsreader-latin-wght-normal.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:"JetBrains Mono";
+  font-style:normal;
+  font-weight:100 800;
+  font-display:swap;
+  src:url(../fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2-variations"),
+      url(../fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+:root{
+  --bg:#101619;
+  --bg-nav:#151d21;
+  --bg-nav-hover:#1a252a;
+  --bg-nav-active:#1e2b31;
+  --bg-card:#161f24;
+  --bg-thesis:#18232a;
+  --bg-code:#0c1114;
+  --border-strong:#2d3d45;
+  --border-main:#223038;
+  --border-soft:#1b262c;
+  --border-divider:#1e2a30;
+  --copper:#cd7f4d;
+  --copper-dim:#8a5836;
+  --verdigris:#5fae9d;
+  --text-primary:#e9eff1;
+  --text-body:#b2bfc4;
+  --text-thesis:#dbe4e7;
+  --text-muted:#8b9aa0;
+  --text-dim:#6b797f;
+  --text-dimmer:#4e5a5f;
+  --text-nav:#93a2a8;
+  --text-footer:#5c696e;
+  --ghost-title:#1c272d;
+  --ghost-numeral:#16201f;
+  --grid-line:#1a252b;
+}
+[data-theme="light"]{
+  --bg:#e6e6e0;
+  --bg-nav:#dcdcd4;
+  --bg-nav-hover:#d3d3ca;
+  --bg-nav-active:#cbcbc0;
+  --bg-card:#f1f1ec;
+  --bg-thesis:#ecebe4;
+  --bg-code:#e0e0d8;
+  --border-strong:#b3b0a4;
+  --border-main:#c6c3b7;
+  --border-soft:#d4d1c6;
+  --border-divider:#cfccc1;
+  --copper:#a0522a;
+  --copper-dim:#b98a67;
+  --verdigris:#2c6d5f;
+  --text-primary:#1b2225;
+  --text-body:#394347;
+  --text-thesis:#232b2e;
+  --text-muted:#5b666a;
+  --text-dim:#788286;
+  --text-dimmer:#98a0a3;
+  --text-nav:#4d585c;
+  --text-footer:#7b8589;
+  --ghost-title:#d4d3c9;
+  --ghost-numeral:#dbdad0;
+  --grid-line:#d5d4ca;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text-body);
+  font-family:"Newsreader",Georgia,serif;
+  font-size:18px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  transition:background .25s ease,color .25s ease;
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *{transition:none !important;animation:none !important;}
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 26px;}
+
+/* ---------- masthead ---------- */
+.masthead{
+  position:relative;
+  border-bottom:1px solid var(--border-main);
+  overflow:hidden;
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:64px 64px;
+}
+.masthead .wrap{padding-top:54px;padding-bottom:40px;}
+.eyebrow{
+  font-family:"JetBrains Mono",monospace;
+  font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--copper);margin:0 0 18px;
+}
+.mast-title{
+  font-family:"Archivo",sans-serif;
+  font-weight:800;
+  font-size:clamp(38px,7.4vw,76px);
+  line-height:.96;
+  letter-spacing:-.03em;
+  color:var(--ghost-title);
+  margin:0;
+  text-transform:uppercase;
+}
+.mast-title em{
+  display:block;font-style:normal;color:var(--copper);
+  font-size:clamp(15px,2.1vw,21px);font-weight:600;letter-spacing:.02em;
+  text-transform:none;margin-top:20px;line-height:1.35;
+  max-width:44ch;
+}
+.mast-meta{
+  margin-top:26px;padding-top:18px;border-top:1px solid var(--border-soft);
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.06em;
+  color:var(--text-dim);display:flex;flex-wrap:wrap;gap:8px 22px;
+}
+.theme-toggle{
+  position:absolute;top:22px;right:26px;z-index:5;
+  background:var(--bg-nav);border:1px solid var(--border-main);color:var(--text-nav);
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;padding:8px 13px;cursor:pointer;border-radius:2px;
+  transition:background .18s,color .18s,border-color .18s;
+}
+.theme-toggle:hover{background:var(--bg-nav-hover);color:var(--text-primary);border-color:var(--border-strong);}
+
+/* ---------- chapter switcher ---------- */
+.chapter-switch{
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;
+  margin:0 0 26px;padding-right:120px; /* clear the absolutely-placed toggle */
+  font-family:"JetBrains Mono",monospace;
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+}
+.chapter-switch a{
+  color:var(--text-dim);text-decoration:none;
+  border-bottom:1px solid transparent;padding-bottom:2px;
+  transition:color .18s,border-color .18s;
+}
+.chapter-switch a:hover{color:var(--verdigris);border-bottom-color:var(--verdigris);}
+.chapter-switch .current{color:var(--text-nav);}
+
+/* ---------- hop rail (signature) ---------- */
+.rail-outer{
+  position:sticky;top:0;z-index:20;
+  background:var(--bg);
+  border-bottom:1px solid var(--border-main);
+}
+.rail-scroll{overflow-x:auto;scrollbar-width:thin;}
+.rail{
+  position:relative;display:flex;gap:0;min-width:max-content;
+  padding:20px 26px 14px;margin:0 auto;max-width:920px;
+}
+.rail::before{
+  content:"";position:absolute;left:26px;right:26px;top:29px;height:1px;
+  background:repeating-linear-gradient(90deg,var(--border-strong) 0 5px,transparent 5px 10px);
+}
+.hop{
+  position:relative;background:none;border:0;padding:0 16px 0 0;margin-right:14px;
+  cursor:pointer;text-align:left;font-family:"JetBrains Mono",monospace;
+  color:var(--text-dim);min-width:96px;
+}
+.hop:last-child{margin-right:0;}
+.hop .dot{
+  display:block;width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border-strong);
+  position:relative;z-index:2;margin-bottom:11px;
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.hop .num{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--text-nav);}
+.hop .lbl{display:block;font-size:10px;letter-spacing:.05em;margin-top:3px;color:var(--text-dimmer);line-height:1.3;max-width:11ch;}
+.hop:hover .dot{border-color:var(--copper);}
+.hop:hover .num,.hop:hover .lbl{color:var(--text-primary);}
+.hop.active .dot{background:var(--copper);border-color:var(--copper);transform:scale(1.25);}
+.hop.active .num{color:var(--copper);}
+.hop.active .lbl{color:var(--text-muted);}
+.hop:focus-visible{outline:2px solid var(--verdigris);outline-offset:4px;}
+
+/* ---------- panels ---------- */
+.panel{display:none;padding:56px 0 0;}
+.panel.active{display:block;}
+.sec-head{position:relative;margin-bottom:44px;}
+.sec-numeral{
+  position:absolute;right:-10px;top:-34px;pointer-events:none;user-select:none;
+  font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(90px,17vw,190px);
+  line-height:1;color:var(--ghost-numeral);letter-spacing:-.05em;z-index:0;
+}
+.sec-label{
+  position:relative;z-index:1;
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--copper);margin:0 0 14px;
+}
+.sec-title{
+  position:relative;z-index:1;
+  font-family:"Archivo",sans-serif;font-weight:700;letter-spacing:-.025em;
+  font-size:clamp(28px,4.6vw,44px);line-height:1.06;color:var(--text-primary);margin:0;
+  max-width:17ch;
+}
+
+h3.block{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--text-dim);margin:48px 0 16px;font-weight:500;
+}
+.idea{
+  border-left:2px solid var(--copper);
+  background:var(--bg-thesis);
+  padding:20px 24px;margin:0 0 8px;
+  color:var(--text-thesis);font-size:19px;line-height:1.5;
+}
+.idea .idea-tag{
+  display:block;font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:9px;font-weight:500;
+}
+.summary p{margin:0 0 20px;}
+.summary p:last-child{margin-bottom:0;}
+.summary strong{color:var(--text-primary);font-weight:500;}
+
+.concepts{list-style:none;margin:0;padding:0 0 0 20px;border-left:1px solid var(--verdigris);}
+.concepts li{margin-bottom:20px;}
+.concepts li:last-child{margin-bottom:0;}
+.concepts .term{
+  font-family:"JetBrains Mono",monospace;font-size:13.5px;font-weight:500;
+  color:var(--verdigris);display:block;margin-bottom:4px;letter-spacing:.01em;
+}
+.concepts .def{color:var(--text-body);font-size:17px;line-height:1.55;}
+
+.formulas{
+  background:var(--bg-code);border:1px solid var(--border-soft);
+  padding:6px 0;margin:0;
+}
+.formula{display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;padding:12px 22px;border-bottom:1px solid var(--border-divider);}
+.formula:last-child{border-bottom:0;}
+.formula code{
+  font-family:"JetBrains Mono",monospace;font-size:14px;color:var(--copper);
+  font-weight:500;white-space:nowrap;
+}
+.formula span{font-size:15.5px;color:var(--text-muted);line-height:1.45;}
+
+.figures{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1px;background:var(--border-soft);border:1px solid var(--border-soft);}
+.fig{background:var(--bg-card);padding:18px 20px;}
+.fig .name{font-family:"Archivo",sans-serif;font-weight:600;color:var(--text-primary);font-size:17px;letter-spacing:-.01em;}
+.fig .role{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);margin:5px 0 8px;}
+.fig .note{font-size:15.5px;color:var(--text-muted);line-height:1.5;}
+
+.practice{
+  border:1px solid var(--border-main);border-top:2px solid var(--verdigris);
+  background:var(--bg-card);padding:20px 24px;margin-top:8px;
+}
+.practice .p-tag{
+  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--verdigris);display:block;margin-bottom:9px;font-weight:500;
+}
+.practice p{margin:0;color:var(--text-body);font-size:17px;}
+
+.roadmap{list-style:none;margin:0;padding:0;border-top:1px solid var(--border-divider);}
+.roadmap li{display:flex;gap:18px;align-items:baseline;padding:13px 2px;border-bottom:1px solid var(--border-divider);}
+.roadmap .ch{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--copper);font-weight:700;min-width:22px;}
+.roadmap .t{color:var(--text-primary);font-size:17px;}
+.roadmap .d{color:var(--text-muted);font-size:15.5px;}
+
+/* ---------- pagination ---------- */
+.pager{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin:64px 0 0;padding:22px 0 0;border-top:1px solid var(--border-main);
+}
+.pager button{
+  background:var(--bg-nav);border:1px solid var(--border-main);color:var(--text-nav);
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;padding:11px 16px;cursor:pointer;border-radius:2px;
+  transition:background .18s,color .18s,border-color .18s;max-width:44%;text-align:left;
+}
+.pager button:hover:not(:disabled){background:var(--bg-nav-hover);color:var(--text-primary);border-color:var(--copper);}
+.pager button:disabled{opacity:.3;cursor:not-allowed;}
+.pager button:focus-visible{outline:2px solid var(--verdigris);outline-offset:3px;}
+.pager .pos{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;color:var(--text-dimmer);white-space:nowrap;}
+
+footer{margin-top:70px;border-top:1px solid var(--border-main);}
+footer .wrap{padding-top:24px;padding-bottom:44px;}
+footer p{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+  color:var(--text-footer);margin:0;text-transform:uppercase;
+}
+
+@media (max-width:640px){
+  body{font-size:17px;}
+  .wrap{padding:0 18px;}
+  .rail{padding-left:18px;padding-right:18px;}
+  .rail::before{left:18px;right:18px;}
+  .sec-numeral{top:-18px;right:-4px;}
+  .pager{flex-wrap:wrap;}
+  .pager .pos{order:3;width:100%;text-align:center;padding-top:6px;}
+  .pager button{max-width:48%;}
+}
+</style>
+</head>
+<script>
+// Applied before first paint so a stored light theme does not flash dark.
+(function(){
+  try{
+    var t = localStorage.getItem("cn-theme");
+    if(!t) t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t);
+  }catch(e){}
+})();
+</script>
+<body>
+
+<header class="masthead">
+  <button class="theme-toggle" id="themeBtn" aria-label="Switch colour theme">☀ Light</button>
+  <div class="wrap">
+    <nav class="chapter-switch" aria-label="Chapters">
+      <a href="../">← All chapters</a>
+      <span class="current" aria-current="page">Ch 1 · The Internet</span>
+      <a href="../ch2/">Ch 2 · Application Layer →</a>
+    </nav>
+    <p class="eyebrow">Kurose &amp; Ross · Chapter 1 · Study guide</p>
+    <h1 class="mast-title">Computer Networks<br>and the Internet
+      <em>A top-down tour of the edge, the core, delay and throughput, protocol layering, security, and how all of it got here.</em>
+    </h1>
+    <div class="mast-meta">
+      <span>8 sections</span><span>·</span><span>Sections 1.1 → 1.8</span><span>·</span><span>Computer Networking: A Top-Down Approach</span>
+    </div>
+  </div>
+</header>
+
+<div class="rail-outer">
+  <div class="rail-scroll">
+    <nav class="rail" id="rail" aria-label="Chapter sections"></nav>
+  </div>
+</div>
+
+<main class="wrap" id="panels"></main>
+
+<footer>
+  <div class="wrap">
+    <p>Kurose &amp; Ross · Computer Networks and the Internet · Chapter 1 · Summary guide</p>
+  </div>
+</footer>
+
+<script>
+const sections = [
+{
+  hop:"1.1", short:"What is the Internet",
+  label:"Section 1.1",
+  title:"What Is the Internet?",
+  idea:"The Internet is two things at once — a concrete assembly of hosts, links and packet switches, and an abstract service infrastructure that distributed applications reach through a socket interface. Protocols are what make both descriptions coherent.",
+  summary:[
+    `The <strong>nuts-and-bolts description</strong> starts with the devices: billions of them, called <strong>hosts</strong> or <strong>end systems</strong>, and no longer just desktops and servers — thermostats, cars, cameras, watches. They are joined by <strong>communication links</strong> built from different physical media (coaxial cable, copper, fibre, radio spectrum), each with a <strong>transmission rate</strong> measured in bits per second, and by <strong>packet switches</strong>. When a host has data to send it segments that data and prepends header bytes to each segment. The resulting units are <strong>packets</strong>, reassembled into the original data at the destination.`,
+    `A packet switch takes a packet arriving on one incoming link and forwards it on one outgoing link. Two types dominate: <strong>routers</strong>, used in the network core, and <strong>link-layer switches</strong>, used in access networks. The specific sequence of links and switches a packet traverses is its <strong>route</strong> or <strong>path</strong>. The textbook analogy is a freight shipment: cargo segmented across a fleet of trucks, each travelling independently through highways and intersections to be regrouped at the warehouse. Packets are trucks, links are roads, switches are intersections, end systems are buildings.`,
+    `End systems reach the network through <strong>Internet Service Providers</strong> — residential, corporate, university, public WiFi, cellular. Each ISP is itself a network of packet switches and links, so the ISPs must also interconnect: lower-tier ISPs connect through national and international upper-tier ISPs, which connect directly to each other. Every ISP network, whatever its tier, is independently managed, runs IP, and conforms to shared naming and addressing conventions.`,
+    `The <strong>services description</strong> takes the opposite angle: the Internet as infrastructure that provides services to distributed applications. Those applications run on end systems, never in the packet switches — the core moves data without caring what it is for. A program hands data to the network through the <strong>socket interface</strong>, a set of rules analogous to the postal service demanding an envelope, an address, a stamp and a mailbox before it will carry a letter. And because everyone must agree on what each protocol does, standards matter: the IETF publishes <strong>RFCs</strong> (nearly 9000 of them, defining TCP, IP, HTTP, SMTP), while IEEE 802 specifies Ethernet and WiFi.`
+  ],
+  concepts:[
+    {t:"Host / end system", d:"Any device sitting at the edge of the network that runs application programs. The two terms are used interchangeably. Hosts split informally into clients (desktops, laptops, phones) and servers (machines that store and distribute content, mostly now inside data centres)."},
+    {t:"Packet", d:"What you get when a sender segments a message and attaches header bytes to each chunk. Packets are routed independently and reassembled at the destination."},
+    {t:"Packet switch", d:"A device that forwards a packet from an incoming link to an outgoing link. Routers dominate the core; link-layer switches dominate access networks."},
+    {t:"Route / path", d:"The particular sequence of communication links and packet switches a packet traverses from source to destination."},
+    {t:"Protocol", d:"Defines the format and the order of messages exchanged between two or more communicating entities, plus the actions taken on the transmission or receipt of a message or on any other event — including the absence of a reply within some interval."},
+    {t:"Socket interface", d:"The set of rules a sending program must follow so the Internet will deliver its data to a specific destination program on another end system."},
+    {t:"TCP/IP", d:"The Internet's principal protocols. IP specifies the format of packets exchanged among routers and end systems; TCP layers reliable, ordered delivery on top."},
+    {t:"RFC / IETF / IEEE 802", d:"Internet standards are developed by the IETF and published as Requests for Comments. IEEE 802 covers the link standards — Ethernet and WiFi."}
+  ],
+  practice:`The formal definition of a protocol — format, order, and the actions taken on events — is worth memorising, because nearly every protocol bug falls into exactly one of the three buckets: a malformed field, an unexpected message sequence, or a missing action for an event that never arrived (the timeout case). Note that a timeout is explicitly part of the definition, not an implementation detail bolted on afterwards.`
+},
+{
+  hop:"1.2", short:"Network edge",
+  label:"Section 1.2",
+  title:"The Network Edge",
+  idea:"The edge is where applications live and where almost all of today's bandwidth constraint sits. Access technologies differ mainly along two axes: whether capacity is dedicated or shared, and whether upstream and downstream are symmetric.",
+  summary:[
+    `Hosts divide into <strong>clients</strong> and <strong>servers</strong>, and most servers now live inside <strong>data centres</strong> — tens to hundreds of thousands of commodity hosts, called blades, stacked 20 to 40 per rack and interconnected by their own internal networks. Data centres do three jobs: serve the operator's own product, act as massively parallel compute for the operator's data processing, and rent capacity to everyone else as <strong>cloud computing</strong>.`,
+    `The <strong>access network</strong> is the network that physically connects an end system to its first router — the <strong>edge router</strong>. <strong>DSL</strong> reuses the existing telephone local loop: the home DSL modem talks to a <strong>DSLAM</strong> in the telco's central office, and frequency-division splits the single line into three apparent links — downstream (50 kHz–1 MHz), upstream (4–50 kHz), and ordinary voice (0–4 kHz). It is <strong>asymmetric</strong> by design, and the achievable rate falls off with distance to the central office; beyond roughly 5 to 10 miles, DSL is not an option.`,
+    `<strong>Cable</strong> access reuses the cable television plant: fibre runs from the head end to neighbourhood junctions serving 500 to 5,000 homes, then coaxial cable covers the last stretch — hence <strong>hybrid fibre coax</strong>. The <strong>CMTS</strong> at the head end plays the DSLAM's role. The decisive property is that HFC is a <strong>shared broadcast medium</strong>: every downstream packet travels to every home on the segment, and the upstream channel needs a multiple-access protocol to avoid collisions. Your throughput therefore depends on what your neighbours are doing. <strong>FTTH</strong> escapes this with direct fibre, or more commonly with an active optical network (switched Ethernet) or a <strong>passive optical network</strong> — an ONT at the home, a passive splitter aggregating fewer than 100 homes, an OLT at the central office. <strong>5G fixed wireless</strong> skips outside plant altogether, beaming to a modem in the house.`,
+    `In enterprises, campuses and increasingly homes, the access technology is a LAN: <strong>Ethernet</strong> over twisted pair at 100 Mbps up to tens of Gbps, and <strong>WiFi</strong> (IEEE 802.11), shared, above 100 Mbps, within tens of metres of an access point. Wide-area cellular extends that range to tens of kilometres. Underneath all of it are <strong>physical media</strong>, split into guided (twisted pair, coax, fibre — waves confined to a solid) and unguided (terrestrial and satellite radio — waves in the atmosphere and space). One economic note that explains a lot of building wiring: the labour of installing a link can cost orders of magnitude more than the cable itself, so builders lay every medium at once.`
+  ],
+  concepts:[
+    {t:"Access network", d:"The network physically connecting an end system to the first router on the path to any other end system."},
+    {t:"DSLAM / CMTS / OLT", d:"The provider-side aggregation point for DSL, cable and PON respectively — where many subscriber lines terminate and analogue or optical signals are converted back for the provider's IP network."},
+    {t:"Asymmetric access", d:"Downstream and upstream rates differ, downstream being higher. True of DSL, cable and most residential access; a consequence of the assumption that homes consume more than they produce."},
+    {t:"Shared broadcast medium", d:"HFC's defining characteristic: all downstream traffic reaches every home on the segment and all upstream traffic shares one channel. Aggregate rate is divided among simultaneously active users, and collisions must be coordinated away."},
+    {t:"PON vs AON", d:"Two optical distribution architectures. A passive optical network splits one fibre to under 100 homes with a passive splitter (packets are replicated at the splitter). An active optical network is essentially switched Ethernet."},
+    {t:"Guided vs unguided media", d:"Guided media confine the wave to a solid (fibre, twisted pair, coax). Unguided media propagate through atmosphere or space (wireless LAN, satellite)."},
+    {t:"Twisted pair", d:"Two insulated copper wires spiralled to cancel interference. Category 6a reaches 10 Gbps over about 100 metres. Still the dominant high-speed LAN medium despite repeated predictions of its death."},
+    {t:"Fibre optics", d:"Pulses of light, each representing a bit. Tens to hundreds of gigabits per second, immune to electromagnetic interference, very low attenuation up to 100 km, hard to tap. Optical Carrier speeds are OC-n = n × 51.8 Mbps."},
+    {t:"Satellite radio", d:"Geostationary satellites sit 36,000 km up, giving a 280 ms propagation delay in each direction path. LEO satellites orbit far closer but do not stay above one spot, so continuous coverage needs many of them."}
+  ],
+  practice:`The 280 ms geostationary figure is the cleanest illustration of a delay you cannot engineer away — it is a distance divided by roughly the speed of light. Buffers, rates, protocols and codecs are all negotiable; propagation is not. Keep this in the front of your mind for section 1.4, where the distinction between transmission delay and propagation delay does most of the analytical work in the chapter.`
+},
+{
+  hop:"1.3", short:"Network core",
+  label:"Section 1.3",
+  title:"The Network Core",
+  idea:"There are exactly two ways to move data through a network of links and switches: reserve resources in advance, or share them on demand and tolerate queues. The Internet chose the second, and its entire structure — from store-and-forward routers to the tiered ISP economy — follows from that one decision.",
+  summary:[
+    `In <strong>packet switching</strong>, a source breaks a message into packets, each transmitted over a link at that link's full rate: a packet of L bits over a link of rate R takes L/R seconds. Most switches use <strong>store-and-forward</strong> transmission, meaning a switch must receive the entire packet before it can transmit the first bit onward. Send one packet over N links of rate R and the end-to-end time is N·L/R. Pipelining then does the rest of the work: because the source starts packet 2 while the router forwards packet 1, three packets over two links arrive at 4L/R rather than 6L/R.`,
+    `Each attached link has an <strong>output buffer</strong>. If an arriving packet finds the link busy it waits, adding a <strong>queuing delay</strong> that varies with congestion; if the buffer is already full, something gets dropped — either the arriving packet or one already queued. <strong>Packet loss</strong> is not a malfunction in this design, it is the pressure-release mechanism. Forwarding itself is table-driven: each end system has a hierarchical <strong>IP address</strong>, the source writes the destination's address into the packet header, and each router looks up a portion of that address in its <strong>forwarding table</strong> to select an outbound link. The book's analogy is a driver who never uses a map, asking successive gas-station attendants for directions — each reads a finer part of the address than the last. <strong>Routing protocols</strong> populate those tables automatically.`,
+    `<strong>Circuit switching</strong> takes the other path: before any data moves, the network establishes a circuit and reserves buffer space and a constant transmission rate on every link along the way, for the whole session. Implementation is either <strong>FDM</strong> (a dedicated frequency band per circuit — 4 kHz in telephone networks) or <strong>TDM</strong> (time divided into frames, each frame into slots, one slot per frame per circuit). A circuit's rate is the frame rate times the bits per slot. The trade is explicit: guaranteed rate and no queuing, paid for with setup signalling and with capacity that sits idle whenever the talker stops talking. The restaurant analogy: reservations mean a hassle before you leave home but a table on arrival.`,
+    `Why packet switching wins for bursty sources is arithmetic. Take a 1 Mbps link and users who need 100 kbps while active but are only active 10 percent of the time. Circuit switching supports exactly 10 users. Packet switching supports 35, because the probability that 11 or more are simultaneously active is about 0.0004 — so 99.96 percent of the time the aggregate arrival rate is below the link rate and packets flow essentially without delay. This is <strong>statistical multiplexing</strong>: circuit switching pre-allocates regardless of demand and wastes what is unneeded, while packet switching allocates on demand among whoever actually has something to send.`,
+    `Finally, the <strong>network of networks</strong>, built up in five successive approximations. Structure 1: every access ISP connects to one global transit ISP, which charges them — customer and provider. Structure 2: competitors appear, and the global transit ISPs must interconnect with each other. Structure 3: nobody actually has a presence in every city, so a regional tier appears between access ISPs and roughly a dozen <strong>tier-1 ISPs</strong> at the top (no body officially confers tier-1 status). Structure 4: add <strong>PoPs</strong> where customer ISPs connect into a provider, <strong>multi-homing</strong> to two or more providers for resilience, settlement-free <strong>peering</strong> between ISPs at the same level to keep traffic off paid upstream links, and <strong>IXPs</strong> — over 600 of them — where many ISPs peer in one building. Structure 5, today's Internet: add <strong>content-provider networks</strong> like Google's private global backbone, which peers directly with lower-tier ISPs to bypass the upper tiers entirely, and buys transit only where it must.`
+  ],
+  formulas:[
+    {e:"d_trans = L / R", n:"Time to push a packet of L bits onto a link of rate R bits/sec."},
+    {e:"d_end-to-end = N · L / R", n:"One packet over N links of equal rate R, store-and-forward, ignoring queuing, propagation and processing."},
+    {e:"circuit rate = R_link / slots", n:"TDM. Example from the text: 1.536 Mbps over 24 slots gives 64 kbps per circuit, so a 640,000-bit file takes 10 s plus 500 ms of setup."}
+  ],
+  concepts:[
+    {t:"Store-and-forward", d:"A switch must receive an entire packet before transmitting its first bit onward. This is why the end-to-end delay for one packet over N links is N·L/R rather than L/R."},
+    {t:"Output buffer (output queue)", d:"Per-link storage holding packets waiting to be transmitted. The source of queuing delay, and — when full — of packet loss."},
+    {t:"Forwarding table", d:"Per-router mapping from destination addresses (or address prefixes) to outbound links. Consulted on every packet."},
+    {t:"Routing protocol", d:"The automated mechanism that sets forwarding tables — for example by computing shortest paths from each router to each destination."},
+    {t:"Circuit switching", d:"Resources along a path are reserved for the duration of a session. Guaranteed constant rate, no queuing, at the cost of setup complexity and idle capacity."},
+    {t:"FDM / TDM", d:"The two ways to implement circuits on a link. FDM gives each connection a continuous slice of the frequency spectrum; TDM gives each connection the whole link during recurring time slots."},
+    {t:"Statistical multiplexing", d:"Sharing a link on demand, packet by packet, among only those users who currently have data. The reason packet switching serves three times as many bursty users as circuit switching at essentially the same performance."},
+    {t:"Tier-1 ISP", d:"An ISP at the top of the hierarchy that pays no one for transit — about a dozen exist. Peering among them is settlement-free."},
+    {t:"PoP / multi-homing / peering / IXP", d:"A PoP is a group of routers where customer ISPs connect into a provider. Multi-homing means connecting to two or more providers so a single provider failure is survivable. Peering is a direct, usually settlement-free connection between two ISPs at the same level. An IXP is a third-party building where many ISPs peer at once."},
+    {t:"Content-provider network", d:"A private global network run by a large content operator, connecting its own data centres and peering directly into lower-tier ISPs to bypass the paid upper tiers and control delivery quality."}
+  ],
+  practice:`Structure 5 explains something you can measure from your own laptop: latency to a large content provider is often lower than latency to a small self-hosted service in the same city. The provider has built and peered its way directly into your access ISP; the small service still transits the hierarchy. It also explains why "where do we peer" is a business question with performance consequences, not the other way round.`
+},
+{
+  hop:"1.4", short:"Delay & throughput",
+  label:"Section 1.4",
+  title:"Delay, Loss, and Throughput",
+  idea:"Total delay decomposes into four terms, only one of which is variable. Throughput is set by the bottleneck link — and in today's Internet the bottleneck is usually in the access network, unless contention pushes it into the core.",
+  summary:[
+    `At every node a packet accumulates four delays. <strong>Processing delay</strong> covers examining the header, deciding the outbound link and checking for bit errors — microseconds or less in fast routers. <strong>Queuing delay</strong> is time spent in the output buffer waiting for earlier packets, ranging from zero to milliseconds and varying packet by packet. <strong>Transmission delay</strong>, L/R, is the time to push all the packet's bits onto the link. <strong>Propagation delay</strong>, d/s, is the time for one bit to travel the length of the link at 2–3 × 10⁸ metres per second. Their sum is the nodal delay.`,
+    `The distinction that trips everyone up is transmission versus propagation. Transmission delay is a function of packet length and link rate, and has nothing to do with distance. Propagation delay is a function of distance and medium, and has nothing to do with packet length or link rate. The caravan analogy: ten cars queue at a tollbooth that services one car every 12 seconds, so pushing the whole caravan onto the road takes 2 minutes — that is transmission. Driving the 100 km to the next tollbooth at 100 km/h takes an hour — that is propagation. Change the numbers so cars travel faster than the booth can serve them, and the front of the caravan reaches the next booth before the back has left the first: exactly what happens when the leading bits of a packet arrive at the next router while the tail is still being transmitted.`,
+    `Queuing delay is governed by <strong>traffic intensity</strong>, La/R — average arrival rate in packets/sec times bits per packet, over the link rate. If La/R exceeds 1, the queue grows without bound and delay heads for infinity, which gives the golden rule of traffic engineering: design so that traffic intensity stays below 1. Below 1, the arrival pattern decides. Perfectly periodic arrivals, one every L/R seconds, never queue at all. Bursty arrivals queue substantially even at the same average rate. And as intensity approaches 1, average queuing delay rises sharply rather than linearly — a small percentage increase in load produces a much larger percentage increase in delay. Because real buffers are finite, the practical outcome is not infinite delay but <strong>packet loss</strong>: an arriving packet finds a full queue and is dropped, which from the end system looks like a packet that entered the core and never emerged.`,
+    `<strong>Throughput</strong> is the other headline metric: instantaneous throughput is the rate the receiver is currently getting bits; average throughput over a transfer of F bits taking T seconds is F/T. Think of bits as fluid and links as pipes — end-to-end throughput is the minimum rate across the path, the <strong>bottleneck link</strong>. For a server on a 2 Mbps uplink and a client on a 1 Mbps access link, throughput is 1 Mbps and a 32-million-bit file takes 32 seconds. Because the modern core is over-provisioned, the bottleneck is usually one of the two access links — but not always: run 10 simultaneous transfers across a shared 5 Mbps core link and each gets 500 kbps, well under both access rates. Throughput depends on the intervening traffic, not only on the path's own rates. <strong>Traceroute</strong> makes all of this visible, sending packets that expire at successive routers and reporting three round-trip times per hop; in the book's sample trace, the sudden jump between hop 7 and hop 8 is a transatlantic fibre, i.e. pure propagation delay.`
+  ],
+  formulas:[
+    {e:"d_nodal = d_proc + d_queue + d_trans + d_prop", n:"The four components at a single node."},
+    {e:"d_trans = L / R  ·  d_prop = d / s", n:"Transmission depends on packet size and link rate. Propagation depends on distance and medium. Never on each other."},
+    {e:"d_end-end = N (d_proc + d_trans + d_prop)", n:"N hops, uncongested network, homogeneous links. Generalises equation 1.1 by adding processing and propagation."},
+    {e:"I = L·a / R", n:"Traffic intensity. Above 1 the queue diverges. Approaching 1, average queuing delay rises non-linearly."},
+    {e:"throughput = min{R₁, R₂, … , R_N}", n:"The bottleneck link rate — adjusted downward when other flows share a link."}
+  ],
+  concepts:[
+    {t:"Processing delay", d:"Header examination, forwarding decision, error checking. Microseconds; usually negligible, but it caps a router's maximum forwarding rate."},
+    {t:"Queuing delay", d:"Time in the output buffer. The only one of the four that varies from packet to packet, which is why it is characterised statistically — mean, variance, and the probability of exceeding a threshold."},
+    {t:"Transmission delay", d:"L/R. The time to push a packet's bits onto the link. Independent of distance."},
+    {t:"Propagation delay", d:"d/s. The time for a bit to traverse the link at close to the speed of light. Independent of packet size and link rate."},
+    {t:"Traffic intensity", d:"La/R. The ratio of the average bit arrival rate to the link's transmission rate. The single number that predicts whether queuing delay will be trivial or catastrophic."},
+    {t:"Packet loss", d:"What happens instead of unbounded delay, because queues are finite. The fraction of lost packets rises with traffic intensity; lost packets may be retransmitted end to end."},
+    {t:"Instantaneous vs average throughput", d:"The rate right now versus F/T over the whole transfer. Some applications need a floor on the instantaneous rate; file transfers only care about the average."},
+    {t:"Bottleneck link", d:"The minimum-rate link along a path, which sets end-to-end throughput. A high-rate link can still be the bottleneck if enough other flows cross it."},
+    {t:"Traceroute", d:"A diagnostic that sends packets designed to expire at hop n, eliciting a reply from each router in turn. Reveals the path and the round-trip delay to every intervening router — three samples per hop."}
+  ],
+  practice:`The traffic-intensity curve is the formal version of something you have already watched on a dashboard: p99 latency exploding while average utilisation moves from 85 to 92 percent. That non-linearity is why capacity planning targets a utilisation level rather than saturation, and why "the link isn't full" is not evidence that queuing isn't hurting you. Note also that a lost packet and a very delayed packet are the same event seen from opposite sides of a finite buffer.`
+},
+{
+  hop:"1.5", short:"Layering",
+  label:"Section 1.5",
+  title:"Protocol Layers and Their Service Models",
+  idea:"Layering buys modularity: each layer implements a service by doing its own work and using only the service directly below. Encapsulation is the mechanism that makes it work — every layer treats the layer above as opaque payload.",
+  summary:[
+    `The airline analogy sets it up. Ticketing, baggage, gate, takeoff/landing and routing each perform an action of their own and use the service of the layer beneath. Ticketing gets you counter to counter; baggage gets an already-ticketed person and their bags check to claim; the gate layer gets them gate to gate; takeoff/landing gets them runway to runway. The payoff is that you can change how a layer works — board passengers by height instead of row — without touching anything else, provided the service it offers stays the same. Changing an implementation is a very different thing from changing a service.`,
+    `The Internet protocol stack has five layers. The <strong>application layer</strong> holds network applications and their protocols — HTTP, SMTP, FTP, DNS — and its packet is a <strong>message</strong>. The <strong>transport layer</strong> carries application messages between endpoints; its packet is a <strong>segment</strong>. The <strong>network layer</strong> moves <strong>datagrams</strong> from host to host and holds IP plus the routing protocols. The <strong>link layer</strong> moves a datagram across one hop as a <strong>frame</strong>, using Ethernet, WiFi, DOCSIS or PPP as the link demands. The <strong>physical layer</strong> moves individual bits across the medium, and its protocols depend on the medium itself — one for twisted pair, another for coax, another for fibre.`,
+    `Two transport protocols exist. <strong>TCP</strong> is connection-oriented and provides guaranteed delivery, flow control so a fast sender does not overrun a slow receiver, segmentation of long messages, and congestion control that throttles the source when the network is loaded. <strong>UDP</strong> is connectionless and does none of this — no reliability, no flow control, no congestion control. At the network layer, by contrast, there is exactly one protocol: every component with a network layer runs <strong>IP</strong>, which is why it is often just called the IP layer. Routing protocols vary from network to network; IP does not. Layering has costs too, and the text names them: a layer can duplicate functionality that already exists below (error recovery per link and again end to end), and a layer sometimes needs information that only another layer holds, which violates the separation the design was meant to buy.`,
+    `<strong>Encapsulation</strong> is how the layers actually compose. The transport layer takes the application message M and prepends its header Ht, producing a segment. The network layer prepends Hn to that segment, producing a datagram. The link layer prepends Hl, producing a frame. At every layer, a packet is exactly two things: header fields and a payload — and the payload is the packet from the layer above. The corporate-memo analogy: the memo goes in an interoffice envelope addressed to a person and department, that envelope goes inside a postal envelope addressed to a branch office, and the receiving mailroom de-encapsulates in reverse. One structural point matters more than the rest: hosts implement all five layers, routers implement layers 1 through 3, and link-layer switches implement only 1 and 2. That is precisely why a switch cannot act on an IP address, and why the architecture's complexity concentrates at the edges.`
+  ],
+  concepts:[
+    {t:"Service model", d:"What a layer offers to the layer above it. The interface that must stay stable when the implementation beneath changes."},
+    {t:"Protocol stack", d:"The protocols of all layers taken together. In the Internet: application, transport, network, link, physical."},
+    {t:"Message / segment / datagram / frame", d:"The names for a packet at the application, transport, network and link layers respectively. Using the right one tells your reader which layer you are talking about."},
+    {t:"TCP", d:"Connection-oriented transport: guaranteed delivery, flow control, message segmentation, congestion control."},
+    {t:"UDP", d:"Connectionless transport: no reliability, no flow control, no congestion control. A no-frills service for applications that would rather handle those themselves — or do without."},
+    {t:"IP", d:"The single network-layer protocol every Internet component with a network layer must run. It defines the datagram fields and how end systems and routers act on them."},
+    {t:"Encapsulation", d:"Each layer wraps the packet from above as its payload and prepends its own header. Every packet is header plus payload, all the way down."},
+    {t:"Layer coverage by device", d:"Hosts implement all five layers. Routers implement layers 1 through 3. Link-layer switches implement layers 1 and 2, and recognise link addresses but not IP addresses."}
+  ],
+  practice:`"Hosts implement all five, routers three, switches two" is the sentence that settles most arguments about where a behaviour could possibly live. If a device has to act on a field, that field must belong to a layer the device actually implements. The chapter also names layering's failure mode honestly — duplicated functionality and layer violations — which is worth remembering before treating the model as a law rather than an engineering convenience.`
+},
+{
+  hop:"1.6", short:"Under attack",
+  label:"Section 1.6",
+  title:"Networks Under Attack",
+  idea:"The Internet was designed around a group of mutually trusting users on a transparent network, so security is retrofitted. Every attack class in this section exploits a default that was originally chosen for openness.",
+  summary:[
+    `<strong>Malware</strong> arrives alongside the traffic you asked for. Once resident on a host it can delete files, install spyware that harvests credentials and keystrokes, and send the results back over the same network. A compromised host may also be enrolled into a <strong>botnet</strong> of thousands of similar machines, used for spam distribution or as attack sources. Much modern malware is <strong>self-replicating</strong>: from each newly infected host it seeks entry into more hosts, so the infected population can grow exponentially.`,
+    `<strong>Denial-of-service</strong> attacks make a host, network or piece of infrastructure unusable by legitimate users, and fall into three categories that need three different defences. A <strong>vulnerability attack</strong> sends a few well-crafted messages to a vulnerable application or operating system, stopping the service or crashing the host. <strong>Bandwidth flooding</strong> sends so many packets that the target's access link is saturated and legitimate packets never arrive. <strong>Connection flooding</strong> opens a large number of half-open or fully open TCP connections until the host is too bogged down to accept real ones.`,
+    `Bandwidth flooding needs a rate of roughly R, the target's access rate. From a single source that is both hard to generate and easy to block upstream — which is exactly why <strong>DDoS</strong> exists: the attacker distributes the load across a botnet so that the aggregate approaches R while no single source looks remarkable. That makes DDoS substantially harder to detect and defend against than a single-source DoS.`,
+    `Two more classes complete the picture. A <strong>packet sniffer</strong> is a passive receiver that records every packet it can hear — trivial near a wireless transmitter, and equally possible on a broadcast wired segment or from a compromised access router. Because it injects nothing, it is very hard to detect, so the defence is cryptography rather than detection. And <strong>IP spoofing</strong> exploits the fact that nothing binds the source address in a datagram to the sender: anyone can craft a packet with an arbitrary source address, content and destination, and the network will dutifully deliver it. The fix is <strong>end-point authentication</strong> — a mechanism for determining with confidence that a message really originated where it claims. The chapter is explicit about the root cause: sending a packet to any user is the default rather than a granted capability, and identity is taken at declared face value rather than authenticated.`
+  ],
+  concepts:[
+    {t:"Malware", d:"Software that enters and infects a device over the network, then deletes data, exfiltrates private information, or enlists the host into a botnet."},
+    {t:"Botnet", d:"A network of thousands of compromised devices under a single attacker's control, used for spam distribution or distributed denial-of-service."},
+    {t:"Self-replicating malware", d:"Malware that, from each host it infects, seeks entry into further hosts — producing exponential spread."},
+    {t:"Vulnerability attack", d:"A DoS variant: a crafted message sequence to a vulnerable application or OS that halts the service or crashes the host."},
+    {t:"Bandwidth flooding", d:"A DoS variant: enough packet volume to clog the target's access link so legitimate traffic cannot get through."},
+    {t:"Connection flooding", d:"A DoS variant: many half-open or open TCP connections, exhausting the host's capacity to accept legitimate ones."},
+    {t:"DDoS", d:"Distributed denial of service. The attacker controls many sources so the aggregate rate reaches the damaging threshold while no single source is conspicuous or blockable."},
+    {t:"Packet sniffer", d:"A passive receiver recording copies of packets in flight. Undetectable in principle because it transmits nothing; defended against with encryption."},
+    {t:"IP spoofing", d:"Injecting packets with a forged source address. One of several ways a user can masquerade as another, and the reason end-point authentication is needed."}
+  ],
+  practice:`The three DoS categories need three unrelated mitigations — patching, absorption or scrubbing capacity, and connection-state limits. Treating "DDoS" as a single phenomenon is how organisations end up buying protection against the wrong one. The deeper point in this section is architectural rather than tactical: openness was a design default, not an oversight, and every retrofitted defence is working against that default.`
+},
+{
+  hop:"1.7", short:"History",
+  label:"Section 1.7",
+  title:"A History of Computer Networking",
+  idea:"Every structural property of today's Internet — packet switching, the TCP/IP split, layering, the DNS — was a specific decision made by a small group of people between 1961 and 1983.",
+  summary:[
+    `<strong>1961–1972.</strong> The dominant network was the telephone network, and circuit switching suited voice, which flows at a constant rate. Time-shared computers produced the opposite traffic pattern: bursts of activity separated by idle contemplation. Three groups invented packet switching independently. Leonard Kleinrock at MIT used queuing theory to demonstrate its effectiveness for bursty sources. Paul Baran at RAND pursued it for survivable military voice. Donald Davies and Roger Scantlebury developed the same ideas at the National Physical Laboratory in England. Lawrence Roberts published the ARPAnet plan; the first packet switch was installed at UCLA on Labor Day 1969, followed by SRI, UC Santa Barbara and Utah — four nodes by year's end. The first remote login crashed the SRI host after two characters, making the first message "Lo". The first host-to-host protocol was NCP; Ray Tomlinson wrote e-mail in 1972.`,
+    `<strong>1972–1980.</strong> Networks multiplied and none could talk to the others: ALOHAnet in Hawaii, packet-satellite and packet-radio networks, Telenet, France's Cyclades, Tymnet, IBM's SNA. Vinton Cerf and Robert Kahn's work on interconnecting them produced the term <strong>internetting</strong>. Early TCP combined reliable in-order delivery with forwarding; the realisation that packetised voice needed an unreliable, non-flow-controlled transport drove the separation of IP out of TCP and the creation of UDP. By the end of the decade the three key protocols were conceptually in place. Meanwhile Norman Abramson's ALOHA protocol became the first multiple-access protocol, and Metcalfe and Boggs built Ethernet on that foundation to connect PCs, printers and shared disks.`,
+    `<strong>1980–1990.</strong> Roughly 200 hosts became roughly 100,000. Growth came from academic networking: BITNET, CSNET, and from 1986 NSFNET, whose backbone grew from 56 kbps to 1.5 Mbps by the decade's end. On 1 January 1983 ARPAnet switched from NCP to TCP/IP in a single coordinated cutover — a flag day, with every host required to move that day. Late in the decade, host-based congestion control was added to TCP, and the DNS arrived to map human-readable names to 32-bit addresses. In parallel, France's state-sponsored Minitel put a free terminal in millions of homes, offering more than 20,000 services at its peak — a decade before most Americans had heard of the Internet.`,
+    `<strong>1990s onward.</strong> ARPAnet ceased to exist, NSFNET lifted its commercial-use restrictions in 1991 and was decommissioned in 1995, and commercial ISPs took over the backbone. Tim Berners-Lee built HTML, HTTP, a server and a browser at CERN between 1989 and 1991; Mosaic and then Netscape brought a GUI to it, and by 1995 students were browsing daily. Four killer applications defined the decade — e-mail, the Web, instant messaging, and peer-to-peer file sharing — the first two from the research community, the last two from young entrepreneurs. Since 2000: broadband, fibre and 5G fixed wireless to the home enabling streaming video at scale; wireless devices overtaking wired in 2011; social networks becoming platforms in their own right; large providers building private global backbones that bypass the public Internet; and applications migrating wholesale into the cloud.`
+  ],
+  figures:[
+    {n:"Leonard Kleinrock", r:"MIT, then UCLA", d:"Built the mathematical theory of packet switching from queuing theory in 1961–64, and supervised the first ARPAnet node in 1969."},
+    {n:"Paul Baran", r:"RAND Institute", d:"Independently investigated packet switching from 1964, motivated by survivable voice communication over military networks."},
+    {n:"Vinton Cerf & Robert Kahn", r:"DARPA", d:"Pioneered interconnecting dissimilar networks — the work that coined internetting and produced the architecture embodied in TCP."},
+    {n:"Robert Metcalfe", r:"Xerox PARC", d:"With David Boggs, built Ethernet on top of Abramson's ALOHA multiple-access work, to connect PCs, printers and shared disks."},
+    {n:"Tim Berners-Lee", r:"CERN", d:"Invented the Web between 1989 and 1991, delivering HTML, HTTP, a server and a browser — the four components together."}
+  ],
+  practice:`The 1983 flag day is the last time the Internet successfully changed a core protocol on a single date. Every transition since has had to be incremental and backward-compatible — IPv6 being the standing example. When you read that a protocol change has to be deployable one node at a time, this is the historical reason: the network long ago outgrew the possibility of a coordinated cutover.`
+},
+{
+  hop:"1.8", short:"Where next",
+  label:"Section 1.8",
+  title:"Summary and the Road Ahead",
+  idea:"The book descends the stack rather than climbing it: understand what applications need first, then examine how each layer beneath actually provides it.",
+  summary:[
+    `The chapter did two passes over the same territory. The first was structural: end systems and applications at the edge, access technologies and physical media, then the core, where packet switching and circuit switching were compared and the global ISP hierarchy assembled from five successive approximations. The second was analytical: the four delay components and simple quantitative models for each, traffic intensity and loss, throughput and bottleneck links, then protocol layering and service models, then security, then history.`,
+    `A short list is worth carrying forward. Transmission delay depends on packet size and link rate; propagation delay depends on distance — they are independent quantities that people conflate constantly. End-to-end throughput is the bottleneck rate, adjusted downward by contention. Queuing delay is the only variable delay component and it degrades non-linearly as intensity approaches 1. Every layer's packet is header plus payload, and the payload is the layer above. Hosts implement five layers, routers three, switches two.`,
+    `The remaining chapters follow the stack downward, on the reasoning that once you know what applications need, the services required to support them make sense, and only then are the implementation choices legible. Chapters 2 through 6 are the core sequence; chapters 7 and 8 take up wireless and mobility, and security, as topics that cut across all the layers.`
+  ],
+  roadmap:[
+    {c:"2", t:"Application Layer", d:"HTTP, e-mail, DNS, video streaming, socket programming"},
+    {c:"3", t:"Transport Layer", d:"Reliable transfer, TCP, UDP, congestion control"},
+    {c:"4", t:"Network Layer: Data Plane", d:"Router internals, IP addressing, forwarding"},
+    {c:"5", t:"Network Layer: Control Plane", d:"Routing algorithms, OSPF, BGP, SDN"},
+    {c:"6", t:"The Link Layer and LANs", d:"Error detection, multiple access, Ethernet, switching, data centre networks"},
+    {c:"7", t:"Wireless and Mobile Networks", d:"802.11, Bluetooth, 4G and 5G cellular, mobility management"},
+    {c:"8", t:"Security in Computer Networks", d:"Cryptography, integrity, authentication, securing TCP/IP"}
+  ],
+  practice:`If you read only one section again before moving to chapter 2, make it 1.4. Delay, loss and throughput are the vocabulary the rest of the book uses to justify every design decision — TCP's congestion control, router buffer sizing, streaming's adaptive bitrate logic all get argued in exactly these terms.`
+}
+];
+
+const rail = document.getElementById("rail");
+const panels = document.getElementById("panels");
+let current = 0;
+
+sections.forEach((s, i) => {
+  const b = document.createElement("button");
+  b.className = "hop";
+  b.type = "button";
+  b.innerHTML = `<span class="dot"></span><span class="num">${s.hop}</span><span class="lbl">${s.short}</span>`;
+  b.addEventListener("click", () => goTo(i));
+  rail.appendChild(b);
+
+  const p = document.createElement("section");
+  p.className = "panel";
+
+  let html = `
+    <div class="sec-head">
+      <div class="sec-numeral" aria-hidden="true">${s.hop}</div>
+      <p class="sec-label">${s.label}</p>
+      <h2 class="sec-title">${s.title}</h2>
+    </div>
+    <div class="idea"><span class="idea-tag">Central idea</span>${s.idea}</div>
+    <h3 class="block">Summary</h3>
+    <div class="summary">${s.summary.map(x => `<p>${x}</p>`).join("")}</div>`;
+
+  if (s.formulas) {
+    html += `<h3 class="block">Formulas worth keeping</h3>
+      <div class="formulas">${s.formulas.map(f => `<div class="formula"><code>${f.e}</code><span>${f.n}</span></div>`).join("")}</div>`;
+  }
+  if (s.concepts) {
+    html += `<h3 class="block">Key concepts</h3>
+      <ul class="concepts">${s.concepts.map(c => `<li><span class="term">${c.t}</span><span class="def">${c.d}</span></li>`).join("")}</ul>`;
+  }
+  if (s.figures) {
+    html += `<h3 class="block">Key figures</h3>
+      <div class="figures">${s.figures.map(f => `<div class="fig"><div class="name">${f.n}</div><div class="role">${f.r}</div><div class="note">${f.d}</div></div>`).join("")}</div>`;
+  }
+  if (s.roadmap) {
+    html += `<h3 class="block">The rest of the book</h3>
+      <ul class="roadmap">${s.roadmap.map(r => `<li><span class="ch">${r.c}</span><span><span class="t">${r.t}</span> — <span class="d">${r.d}</span></span></li>`).join("")}</ul>`;
+  }
+  if (s.practice) {
+    html += `<h3 class="block">Why it matters</h3>
+      <div class="practice"><span class="p-tag">In practice</span><p>${s.practice}</p></div>`;
+  }
+
+  html += `
+    <div class="pager">
+      <button type="button" data-dir="-1">← ${i > 0 ? sections[i-1].hop + " " + sections[i-1].short : "Start"}</button>
+      <span class="pos">${String(i+1).padStart(2,"0")} / ${String(sections.length).padStart(2,"0")}</span>
+      <button type="button" data-dir="1">${i < sections.length-1 ? sections[i+1].hop + " " + sections[i+1].short : "End"} →</button>
+    </div>`;
+
+  p.innerHTML = html;
+  p.querySelectorAll(".pager button").forEach(btn => {
+    const dir = parseInt(btn.dataset.dir, 10);
+    if ((i === 0 && dir === -1) || (i === sections.length-1 && dir === 1)) btn.disabled = true;
+    btn.addEventListener("click", () => goTo(i + dir));
+  });
+  panels.appendChild(p);
+});
+
+const hopBtns = rail.querySelectorAll(".hop");
+const panelEls = panels.querySelectorAll(".panel");
+
+function goTo(idx){
+  if (idx < 0 || idx >= sections.length) return;
+  current = idx;
+  hopBtns.forEach((b,i) => b.classList.toggle("active", i === idx));
+  panelEls.forEach((p,i) => p.classList.toggle("active", i === idx));
+  hopBtns[idx].scrollIntoView({block:"nearest", inline:"center", behavior:"smooth"});
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  if (e.key === "ArrowRight") goTo(current + 1);
+  if (e.key === "ArrowLeft") goTo(current - 1);
+});
+
+const THEME_KEY = "cn-theme";
+const themeBtn = document.getElementById("themeBtn");
+let isDark = true;
+
+function readStoredTheme(){
+  try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+}
+function storeTheme(v){
+  try { localStorage.setItem(THEME_KEY, v); } catch (e) { /* private mode: ignore */ }
+}
+function applyTheme(dark){
+  isDark = dark;
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  themeBtn.textContent = dark ? "☀ Light" : "☾ Dark";
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+}
+
+// Stored choice wins; otherwise follow the OS preference; otherwise dark.
+const stored = readStoredTheme();
+const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+applyTheme(stored ? stored === "dark" : !prefersLight);
+
+themeBtn.addEventListener("click", () => {
+  applyTheme(!isDark);
+  storeTheme(isDark ? "dark" : "light");
+});
+
+goTo(0);
+</script>
+</body>
+</html>

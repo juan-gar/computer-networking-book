@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 2 · Application Layer — Study Guide</title>
+<meta name="description" content="An interactive study guide to Chapter 2 of Kurose &amp; Ross, Computer Networking: A Top-Down Approach. Eight sections covering network application principles, HTTP, e-mail, DNS, P2P file distribution, video streaming and CDNs, and socket programming.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#101619" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#e6e6e0" media="(prefers-color-scheme: light)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23101619'/%3E%3Ccircle cx='14' cy='32' r='5' fill='%23cd7f4d'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%235fae9d'/%3E%3Ccircle cx='50' cy='32' r='5' fill='%23cd7f4d'/%3E%3Cline x1='19' y1='32' x2='27' y2='32' stroke='%232d3d45' stroke-width='3'/%3E%3Cline x1='37' y1='32' x2='45' y2='32' stroke='%232d3d45' stroke-width='3'/%3E%3C/svg%3E">
+
+<!-- Social preview. URLs are absolute because scrapers require it; update them
+     if the site ever moves to a different Pages URL or a custom domain. -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Application Layer — Chapter 2 Study Guide">
+<meta property="og:description" content="Network application principles, HTTP, e-mail, DNS, P2P file distribution, video streaming and CDNs, and socket programming.">
+<meta property="og:url" content="https://juan-gar.github.io/computer-networking-book/ch2/">
+<meta property="og:image" content="https://juan-gar.github.io/computer-networking-book/ch2/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Application Layer — Chapter 2 Study Guide">
+<meta name="twitter:description" content="Network application principles, HTTP, e-mail, DNS, P2P file distribution, video streaming and CDNs, and socket programming.">
+<meta name="twitter:image" content="https://juan-gar.github.io/computer-networking-book/ch2/og-image.png">
+
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+:root{
+  --bg:#101619;
+  --bg-nav:#151d21;
+  --bg-nav-hover:#1a252a;
+  --bg-nav-active:#1e2b31;
+  --bg-card:#161f24;
+  --bg-thesis:#18232a;
+  --bg-code:#0c1114;
+  --border-strong:#2d3d45;
+  --border-main:#223038;
+  --border-soft:#1b262c;
+  --border-divider:#1e2a30;
+  --copper:#cd7f4d;
+  --copper-dim:#8a5836;
+  --verdigris:#5fae9d;
+  --text-primary:#e9eff1;
+  --text-body:#b2bfc4;
+  --text-thesis:#dbe4e7;
+  --text-muted:#8b9aa0;
+  --text-dim:#6b797f;
+  --text-dimmer:#4e5a5f;
+  --text-nav:#93a2a8;
+  --text-footer:#5c696e;
+  --ghost-title:#1c272d;
+  --ghost-numeral:#16201f;
+  --grid-line:#1a252b;
+}
+[data-theme="light"]{
+  --bg:#e6e6e0;
+  --bg-nav:#dcdcd4;
+  --bg-nav-hover:#d3d3ca;
+  --bg-nav-active:#cbcbc0;
+  --bg-card:#f1f1ec;
+  --bg-thesis:#ecebe4;
+  --bg-code:#e0e0d8;
+  --border-strong:#b3b0a4;
+  --border-main:#c6c3b7;
+  --border-soft:#d4d1c6;
+  --border-divider:#cfccc1;
+  --copper:#a0522a;
+  --copper-dim:#b98a67;
+  --verdigris:#2c6d5f;
+  --text-primary:#1b2225;
+  --text-body:#394347;
+  --text-thesis:#232b2e;
+  --text-muted:#5b666a;
+  --text-dim:#788286;
+  --text-dimmer:#98a0a3;
+  --text-nav:#4d585c;
+  --text-footer:#7b8589;
+  --ghost-title:#dcdcd2;
+  --ghost-numeral:#d6d6cb;
+  --grid-line:#d8d8cf;
+}
+
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text-body);
+  font-family:"Newsreader",serif;
+  font-size:17px;
+  line-height:1.65;
+  transition:background .2s ease, color .2s ease;
+}
+::selection{background:var(--copper); color:#101010;}
+a{color:var(--verdigris);}
+code, .mono{font-family:"JetBrains Mono", monospace;}
+
+/* ---------- masthead ---------- */
+.masthead{
+  position:relative;
+  padding:56px 32px 40px;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size:34px 34px;
+  border-bottom:1px solid var(--border-main);
+  overflow:hidden;
+}
+.masthead-inner{max-width:920px; margin:0 auto; position:relative;}
+.eyebrow{
+  font-family:"JetBrains Mono", monospace;
+  font-size:13px;
+  letter-spacing:.22em;
+  color:var(--copper);
+  text-transform:uppercase;
+  margin:0 0 18px;
+}
+.masthead h1{
+  font-family:"Archivo", sans-serif;
+  font-weight:800;
+  font-size:clamp(34px, 6vw, 58px);
+  line-height:1.04;
+  color:var(--ghost-title);
+  margin:0 0 4px;
+  letter-spacing:-.01em;
+}
+.masthead h1 span{color:var(--text-primary);}
+.masthead .tagline{
+  font-family:"Newsreader", serif;
+  font-style:italic;
+  font-weight:400;
+  font-size:clamp(17px, 2.4vw, 21px);
+  color:var(--text-muted);
+  max-width:640px;
+  margin:18px 0 0;
+}
+.theme-toggle{
+  position:absolute; top:4px; right:0;
+  font-family:"JetBrains Mono", monospace;
+  font-size:13px;
+  letter-spacing:.06em;
+  background:var(--bg-card);
+  color:var(--text-nav);
+  border:1px solid var(--border-strong);
+  border-radius:20px;
+  padding:8px 16px;
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.theme-toggle:hover{background:var(--bg-nav-hover); color:var(--text-primary);}
+.theme-toggle:focus-visible, button:focus-visible, .hop:focus-visible{
+  outline:2px solid var(--verdigris); outline-offset:2px;
+}
+
+/* ---------- chapter switcher ---------- */
+.chapter-switch{
+  display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px;
+  margin:0 0 24px; padding-right:130px; /* clear the absolutely-placed toggle */
+  font-family:"JetBrains Mono", monospace;
+  font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+}
+.chapter-switch a{
+  color:var(--text-dim); text-decoration:none;
+  border-bottom:1px solid transparent; padding-bottom:2px;
+  transition:color .15s ease, border-color .15s ease;
+}
+.chapter-switch a:hover{color:var(--verdigris); border-bottom-color:var(--verdigris);}
+.chapter-switch .current{color:var(--text-nav);}
+
+/* ---------- hop rail ---------- */
+.rail-wrap{
+  position:sticky; top:0; z-index:20;
+  background:var(--bg-nav);
+  border-bottom:1px solid var(--border-main);
+  backdrop-filter:blur(6px);
+}
+.rail{
+  max-width:920px; margin:0 auto;
+  display:flex; overflow-x:auto;
+  padding:0 16px;
+  scrollbar-width:thin;
+}
+.rail::-webkit-scrollbar{height:4px;}
+.rail::-webkit-scrollbar-thumb{background:var(--border-strong);}
+.hop{
+  flex:0 0 auto;
+  display:flex; align-items:center; gap:8px;
+  background:none; border:none; cursor:pointer;
+  padding:16px 14px;
+  font-family:"JetBrains Mono", monospace;
+  color:var(--text-nav);
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  transition:background .12s ease, color .12s ease, border-color .12s ease;
+}
+.hop:hover{background:var(--bg-nav-hover); color:var(--text-primary);}
+.hop .dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--border-strong);
+  transition:background .15s ease, box-shadow .15s ease;
+}
+.hop .num{font-size:13px; font-weight:500; color:var(--copper-dim);}
+.hop .lbl{font-size:12px; letter-spacing:.02em; color:var(--text-dim); display:none;}
+.hop.active{border-bottom-color:var(--copper); background:var(--bg-nav-active); color:var(--text-primary);}
+.hop.active .dot{background:var(--copper); box-shadow:0 0 0 3px rgba(205,127,77,.18);}
+.hop.active .num{color:var(--copper);}
+.hop.active .lbl{color:var(--text-primary);}
+@media(min-width:720px){ .hop .lbl{display:inline;} }
+
+/* ---------- panels ---------- */
+main{max-width:920px; margin:0 auto; padding:0 32px;}
+.panel{display:none; padding:56px 0 40px; animation:fade .25s ease;}
+.panel.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.sec-head{position:relative; margin-bottom:32px;}
+.sec-numeral{
+  position:absolute; top:-34px; right:-8px;
+  font-family:"Archivo", sans-serif;
+  font-weight:800;
+  font-size:120px;
+  line-height:1;
+  color:var(--ghost-numeral);
+  user-select:none; z-index:0;
+  pointer-events:none;
+}
+.sec-label{
+  font-family:"JetBrains Mono", monospace;
+  font-size:13px; letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--copper);
+  margin:0 0 10px; position:relative; z-index:1;
+}
+.sec-title{
+  font-family:"Archivo", sans-serif;
+  font-weight:700;
+  font-size:clamp(26px, 4vw, 36px);
+  color:var(--text-primary);
+  margin:0; position:relative; z-index:1;
+  max-width:80%;
+}
+
+.idea{
+  position:relative;
+  background:var(--bg-thesis);
+  border:1px solid var(--border-main);
+  border-left:3px solid var(--verdigris);
+  border-radius:4px;
+  padding:22px 24px;
+  font-family:"Newsreader", serif;
+  font-style:italic;
+  font-size:19px;
+  line-height:1.55;
+  color:var(--text-thesis);
+  margin-bottom:36px;
+}
+.idea-tag{
+  display:block;
+  font-family:"JetBrains Mono", monospace;
+  font-style:normal;
+  font-size:11px; letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--verdigris);
+  margin-bottom:8px;
+}
+
+h3.block{
+  font-family:"JetBrains Mono", monospace;
+  font-size:13px; letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  border-top:1px solid var(--border-divider);
+  padding-top:28px;
+  margin:36px 0 16px;
+}
+.panel > h3.block:first-of-type{margin-top:0;}
+
+.summary p{margin:0 0 16px; color:var(--text-body);}
+.summary p:last-child{margin-bottom:0;}
+
+.formulas{display:flex; flex-direction:column; gap:10px;}
+.formula{
+  display:flex; align-items:baseline; gap:18px; flex-wrap:wrap;
+  background:var(--bg-code);
+  border:1px solid var(--border-soft);
+  border-radius:4px;
+  padding:14px 18px;
+}
+.formula code{
+  color:var(--copper);
+  font-size:15px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.formula span{color:var(--text-muted); font-size:14.5px; font-family:"Newsreader", serif; font-style:italic;}
+
+ul.concepts{list-style:none; margin:0; padding:0; display:flex; flex-direction:column;}
+ul.concepts li{
+  display:grid; grid-template-columns:200px 1fr; gap:20px;
+  padding:14px 0;
+  border-bottom:1px solid var(--border-divider);
+}
+ul.concepts li:last-child{border-bottom:none;}
+.term{font-family:"JetBrains Mono", monospace; font-size:14px; font-weight:700; color:var(--verdigris);}
+.def{color:var(--text-body); font-size:15.5px;}
+@media(max-width:560px){
+  ul.concepts li{grid-template-columns:1fr;}
+}
+
+ul.roadmap{list-style:none; margin:0; padding:0;}
+ul.roadmap li{
+  display:grid; grid-template-columns:110px 1fr; gap:18px;
+  padding:12px 0;
+  border-bottom:1px solid var(--border-divider);
+  align-items:baseline;
+}
+ul.roadmap li:last-child{border-bottom:none;}
+.roadmap .ch{font-family:"JetBrains Mono", monospace; font-size:13px; color:var(--copper-dim); font-weight:700;}
+.roadmap .t{color:var(--text-primary); font-weight:600; font-family:"Archivo", sans-serif; font-size:14.5px;}
+.roadmap .d{color:var(--text-dim); font-size:14px; font-family:"JetBrains Mono", monospace;}
+@media(max-width:560px){
+  ul.roadmap li{grid-template-columns:1fr;}
+}
+
+.practice{
+  background:var(--bg-card);
+  border:1px solid var(--border-main);
+  border-radius:4px;
+  padding:20px 22px;
+}
+.p-tag{
+  display:block;
+  font-family:"JetBrains Mono", monospace;
+  font-size:11px; letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--copper);
+  margin-bottom:8px;
+}
+.practice p{margin:0; color:var(--text-body);}
+
+.pager{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:48px; padding-top:24px;
+  border-top:1px solid var(--border-divider);
+}
+.pager button{
+  font-family:"JetBrains Mono", monospace;
+  font-size:13px;
+  background:var(--bg-card);
+  color:var(--text-nav);
+  border:1px solid var(--border-strong);
+  border-radius:20px;
+  padding:9px 18px;
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.pager button:hover:not(:disabled){background:var(--bg-nav-hover); color:var(--text-primary);}
+.pager button:disabled{opacity:.35; cursor:default;}
+.pager .pos{font-family:"JetBrains Mono", monospace; font-size:12.5px; color:var(--text-dimmer); letter-spacing:.1em;}
+
+footer{
+  max-width:920px; margin:0 auto;
+  padding:32px 32px 64px;
+  font-family:"JetBrains Mono", monospace;
+  font-size:12.5px; letter-spacing:.05em;
+  color:var(--text-footer);
+  border-top:1px solid var(--border-divider);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .panel{animation:none;}
+  *{transition:none !important;}
+}
+</style>
+</head>
+<script>
+// Applied before first paint so a stored light theme does not flash dark.
+(function(){
+  try{
+    var t = localStorage.getItem("cn-theme");
+    if(!t) t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t);
+  }catch(e){}
+})();
+</script>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <nav class="chapter-switch" aria-label="Chapters">
+      <a href="../">← All chapters</a>
+      <a href="../ch1/">← Ch 1 · The Internet</a>
+      <span class="current" aria-current="page">Ch 2 · Application Layer</span>
+    </nav>
+    <p class="eyebrow">Kurose &amp; Ross · Computer Networking: A Top-Down Approach</p>
+    <h1>Application <span>Layer</span></h1>
+    <p class="tagline">Network applications live entirely on end systems, talking to each other through the one seam a developer controls — the socket. Eight sections, from first principles to writing the client and server code yourself.</p>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false">☀ Light</button>
+  </div>
+</header>
+
+<div class="rail-wrap">
+  <nav class="rail" id="rail" aria-label="Section navigation"></nav>
+</div>
+
+<main id="panels"></main>
+
+<footer>Kurose &amp; Ross · Computer Networking: A Top-Down Approach · Chapter 2 — Application Layer · Study Guide</footer>
+
+<script>
+const sections = [
+{
+  hop:"2.1", short:"Principles",
+  label:"Section 2.1", title:"Principles of Network Applications",
+  idea:"Network applications are written entirely for end systems. You can't run code on a router even if you wanted to — the network core operates only up through the network layer — so the whole design problem is: what runs on the two end hosts, and how do the two processes find and trust each other across a network you don't control.",
+  summary:[
+    "Every network application needs an architecture before it needs code. The two dominant paradigms are client-server, where an always-on host with a fixed, well-known IP address services requests from many clients that never talk directly to each other, and peer-to-peer (P2P), where intermittently-connected peers exchange data directly with minimal reliance on infrastructure servers. Client-server scales by throwing more machines into a data center; P2P is self-scaling, because each new peer that arrives generates load but also brings its own upload capacity to the system.",
+    "It's processes, not programs, that actually communicate, and processes on different hosts talk by exchanging messages through a software interface called a socket — the door between an application's side of the wall, which the developer controls completely, and the transport layer's side, which the developer barely touches beyond picking a protocol. In any given communication session, whichever process initiates contact is labeled the client; the process that waits to be contacted is the server. A single peer in BitTorrent can be a server in one session and a client in another.",
+    "To reach a specific process rather than just a host, a message needs two pieces of addressing: the destination host's IP address and a port number identifying the specific socket on that host. Well-known applications claim fixed port numbers — port 80 for a Web server, port 25 for SMTP — so a client always knows where to knock.",
+    "Once you know who you're talking to, the real design question is what the transport layer promises you. Services split along four dimensions: reliable data transfer (does every byte arrive, uncorrupted, in order?), throughput (is a minimum bit rate guaranteed?), timing (is there a bound on end-to-end delay?), and security (is the data encrypted and authenticated?). The Internet's two transport protocols each answer these differently — and an application-layer protocol on top of either one still has to define its own message types, syntax, field semantics, and rules for when messages get sent."
+  ],
+  concepts:[
+    {t:"Socket", d:"The application-transport interface. The application pushes bytes out its socket and trusts the transport layer to get them to the destination socket; it's the only part of the network stack the app developer directly controls."},
+    {t:"Client-server architecture", d:"Always-on server, fixed IP address, clients initiate and never talk to each other directly. Used by the Web, FTP, e-mail. Scales via data centers."},
+    {t:"P2P architecture", d:"Peers communicate directly with minimal dedicated infrastructure. Self-scaling — each peer both consumes and supplies capacity — but harder to secure and less reliable."},
+    {t:"Process vs. program", d:"A process is a program in execution; it's processes on different hosts, not the static programs, that exchange messages."},
+    {t:"Port number", d:"Identifies a specific socket on a host. Paired with the host's IP address, it fully addresses a destination process — necessary because a host can run many applications at once."},
+    {t:"Four transport dimensions", d:"Reliable data transfer, throughput, timing, and security — the axes along which every transport-layer service can be described and compared."}
+  ],
+  practice:"TLS is the clearest illustration of the client-server/socket model in practice: it isn't a third transport protocol sitting beside TCP and UDP, it's an application-layer library that both sides include, encrypting cleartext before handing it to an ordinary TCP socket. Choosing a transport protocol and choosing security are two separate decisions the developer makes on the application side of the socket — the network core never sees either choice."
+},
+{
+  hop:"2.2", short:"Web & HTTP",
+  label:"Section 2.2", title:"The Web and HTTP",
+  idea:"HTTP is deliberately stateless — the server forgets a client the instant it's served it — which makes the protocol simple and the server scalable, but pushes every problem statelessness creates (sessions, caching freshness, one-connection-per-object overhead) back onto cookies, conditional GETs, and persistent connections.",
+  summary:[
+    "A Web page is a base HTML file plus a set of objects — images, scripts, style sheets — each addressable by its own URL. HTTP runs over TCP, so before any bytes move, the client opens a TCP connection to the server, typically on port 80. The server keeps no memory of which objects it has already sent to which client; ask for the same object twice and it sends it twice. That's what stateless means.",
+    "The connection strategy matters enormously. Non-persistent connections open and close a fresh TCP connection for every single object — two RTTs of overhead each (one for the handshake, one for the request/response) before a single byte of that object's transmission time even counts. HTTP/1.1's default, persistent connections, reuses one TCP connection for an entire page's worth of objects and, with pipelining, lets the client fire off back-to-back requests without waiting for each reply — turning an 11-connection page load into essentially one round trip of setup cost.",
+    "Every HTTP message is human-readable ASCII with a strict shape: a request line (method, URL, version) or status line (version, status code, phrase), followed by header lines, a blank line, and — for POST responses and replies — an entity body. GET is used for nearly everything; POST carries form data in the body; HEAD returns headers without the object, handy for debugging; PUT and DELETE upload and remove objects. Status codes like 200 OK, 301 Moved Permanently, 404 Not Found, and 505 HTTP Version Not Supported tell the client what happened.",
+    "Cookies bolt a session layer onto a stateless protocol: a Set-cookie header from the server becomes a Cookie header the browser echoes on every subsequent request to that site, letting Amazon track a shopping cart without ever learning your name until you tell it. Web caches (proxy servers) sit between browser and origin server, serving cached copies directly and dramatically cutting both response time and access-link congestion; the conditional GET (If-Modified-Since) lets a cache confirm a cached object is still fresh with a 304 Not Modified instead of re-downloading it. HTTP/2 attacks a different problem — head-of-line blocking on a single TCP connection — by breaking every message into small binary frames and interleaving them, so one large video object no longer stalls nine small ones behind it."
+  ],
+  formulas:[
+    {e:"RTT + RTT + transmission time", n:"non-persistent connection: handshake RTT, then request/response RTT, then the object itself"},
+    {e:"Δ / (1 − Δb)", n:"average access-link delay, where Δ is per-object transmission time and b the object arrival rate — blows up as traffic intensity Δb approaches 1"}
+  ],
+  concepts:[
+    {t:"Stateless protocol", d:"HTTP servers retain no information about past requests. Simplifies the server enormously; sessions have to be layered on top with cookies."},
+    {t:"Non-persistent vs. persistent", d:"One TCP connection per object (2 RTT overhead each) versus one connection for a whole page or more, with pipelining allowing back-to-back requests."},
+    {t:"Cookie", d:"Four parts: a Set-cookie response header, a Cookie request header, a client-side cookie file, and a server-side back-end database keyed by a unique ID."},
+    {t:"Conditional GET", d:"A GET with If-Modified-Since. Server replies 304 Not Modified with an empty body if the cached copy is still current — saves bandwidth and delay."},
+    {t:"Web cache / proxy server", d:"Intercepts requests on behalf of an origin server; acts as server to the client and client to the origin. Cuts both response time and upstream link traffic."},
+    {t:"HOL blocking / HTTP-2 framing", d:"On one TCP connection, a large object can stall smaller ones behind it. HTTP/2 interleaves binary frames from concurrent responses to avoid this."}
+  ],
+  practice:"The book's own numbers make the case for caching concrete: an access link running at traffic intensity 1.0 has effectively unbounded delay, but installing a cache with just a 0.4 hit rate — objects served almost instantly from the LAN — drops the link's traffic intensity to 0.6 and the average response time from minutes to about 1.2 seconds, without touching the access link's bandwidth at all."
+},
+{
+  hop:"2.3", short:"E-mail",
+  label:"Section 2.3", title:"Electronic Mail in the Internet",
+  idea:"E-mail is a push protocol talking to a pull protocol: SMTP shoves a message from Alice's mail server to Bob's, entirely automatically and without Bob's host needing to be online, and only later does Bob's own pull — over HTTP or IMAP — bring the message down to a device he actually controls.",
+  summary:[
+    "Three pieces make up Internet mail: user agents (Outlook, Gmail) for composing and reading, mail servers that hold mailboxes and run both sides of SMTP, and SMTP itself, which does the actual server-to-server transfer over a reliable TCP connection. Alice's message goes user agent → her mail server's outgoing queue → a direct TCP connection to Bob's mail server → Bob's mailbox — never through an intermediate relay, even if the two servers are on opposite sides of the planet.",
+    "SMTP is older than HTTP and shows it: message bodies are restricted to 7-bit ASCII, a limitation from an era before anyone e-mailed video, forcing multimedia attachments to be encoded before transport and decoded after. The protocol itself is a short, human-readable handshake — HELO, MAIL FROM, RCPT TO, DATA, a lone period on its own line to mark the end of the message, then QUIT — and, like HTTP/1.1, SMTP defaults to persistent connections when a server has several messages queued for the same destination.",
+    "The mail message itself carries its own header, separate from the SMTP commands used to deliver it — From:, To:, and an optional Subject: line, followed by a blank line and then the body. It's easy to conflate SMTP's MAIL FROM: command with the message's From: header, but they're independent: SMTP's commands are handshake protocol, the header lines are protocol-defined metadata sent as part of the message content.",
+    "Because a recipient's device can't reasonably stay online around the clock waiting for mail, the recipient's mail server holds messages until pulled. Web-based mail and phone apps pull over HTTP; traditional mail clients like Outlook pull with IMAP — both let a user organize mail into folders that live on the server, not the device."
+  ],
+  concepts:[
+    {t:"User agent", d:"The mail client — Outlook, Apple Mail, Gmail — used to compose, read, forward, and organize messages."},
+    {t:"SMTP (push protocol)", d:"Transfers mail server-to-server over TCP. The client side runs on the sender's mail server, the server side on the recipient's."},
+    {t:"Message queue & retry", d:"If a destination server is unreachable, the sending server holds the message and retries roughly every 30 minutes before giving up and notifying the sender."},
+    {t:"Mail header vs. SMTP commands", d:"From:/To:/Subject: are part of the message content (RFC 5322); HELO/MAIL FROM/RCPT TO are the separate delivery handshake (RFC 5321)."},
+    {t:"IMAP / HTTP mail access", d:"Pull protocols the recipient's own user agent uses to retrieve mail already deposited on the mail server by SMTP."}
+  ],
+  practice:"The two-step relay — user agent to sender's own server, then that server to the recipient's — exists specifically so a temporarily unreachable destination doesn't strand the message on Alice's device. If Alice's own server can't reach Bob's, her server keeps retrying on her behalf; if Alice's server itself is down, that's when she has recourse to complain to her system administrator, as the book puts it."
+},
+{
+  hop:"2.4", short:"DNS",
+  label:"Section 2.4", title:"DNS — The Internet's Directory Service",
+  idea:"DNS looks like core network infrastructure — nothing works without it — but it's implemented exactly like any other application: client-server queries over UDP port 53, at the edge of the network, which is precisely why a botnet-driven DDoS against it can take down half the Web without ever touching a router.",
+  summary:[
+    "People want mnemonic hostnames; routers want fixed-length, hierarchical IP addresses. DNS reconciles the two — it's simultaneously a distributed database spread across a hierarchy of servers and an application-layer protocol for querying that database. Beyond simple hostname-to-address translation, DNS also does host aliasing (a canonical name behind a friendlier one), mail server aliasing via MX records, and load distribution by rotating the order of multiple IP addresses returned for one replicated hostname.",
+    "A single centralized DNS server would be a single point of failure, would have to absorb every query on Earth, would sit far from most of its clients, and would need constant updating — so DNS is distributed across three tiers: root servers (13 logical servers, over 1000 physical instances) that point to top-level-domain servers, TLD servers (one cluster per .com, .edu, .org, and so on) that point to authoritative servers, and authoritative servers that hold the actual records for a specific organization's hosts. A local DNS server, provided by your ISP, sits outside this hierarchy as a proxy, forwarding your queries into it and caching what comes back.",
+    "Resolving gaia.cs.umass.edu from an NYU host walks that hierarchy: local server → root (learns the .edu TLD server) → TLD (learns UMass's authoritative server) → authoritative server (returns the IP address) — eight messages for one lookup, in the worst case. Caching is what keeps this tractable: once a local server has resolved a name, it serves later requests for it immediately, and TTLs (typically around two days) govern when that cached entry expires. In practice, caching lets root servers be bypassed for all but a tiny fraction of all queries.",
+    "The database itself is made of resource records — (Name, Value, Type, TTL) four-tuples. Type A maps a hostname to an address; NS points to an authoritative server for a domain; CNAME gives the canonical name behind an alias; MX gives the canonical name of a mail server. Because DNS is so foundational, it's also a favored DDoS target — the 2016 Dyn attack, launched from roughly 100,000 Mirai-infected IoT devices, knocked Twitter, Netflix, and Spotify offline for most of a day by flooding TLD-level infrastructure that's much harder to filter than the well-protected root servers."
+  ],
+  concepts:[
+    {t:"Root / TLD / authoritative servers", d:"Three tiers of the DNS hierarchy. Root points to TLD servers (.com, .edu…); TLD points to a domain's authoritative server; authoritative servers hold the actual A/MX/etc. records."},
+    {t:"Local DNS server", d:"Your ISP's default name server. Not part of the hierarchy itself — acts as a caching proxy between your host and the hierarchy."},
+    {t:"Recursive vs. iterative query", d:"Recursive: the server you queried resolves the name on your behalf. Iterative: it hands you the next server to ask yourself. Client-to-local is typically recursive; the rest of the chain is typically iterative."},
+    {t:"Resource record types", d:"A (hostname→IP), NS (domain→authoritative server), CNAME (alias→canonical name), MX (alias→canonical mail server name)."},
+    {t:"DNS caching & TTL", d:"Any server can cache any reply it sees. TTL governs eviction — commonly around two days — and is why root servers see only a sliver of total DNS traffic."},
+    {t:"DNSSEC", d:"Secured DNS extension defending against cache-poisoning and man-in-the-middle attacks that trick a resolver into accepting bogus records."}
+  ],
+  practice:"A registrar is the practical, human-facing side of all this: registering networkutopia.com means the registrar inserts an NS record and a matching A record for your authoritative server into the .com TLD servers — the two-record act that makes the rest of the Internet able to find your site at all."
+},
+{
+  hop:"2.5", short:"P2P",
+  label:"Section 2.5", title:"Peer-to-Peer File Distribution",
+  idea:"In client-server distribution the server's upload link is a hard ceiling that gets worse as more peers join; in P2P distribution every downloading peer also uploads, so total system capacity grows with demand instead of against it — which is the whole reason BitTorrent can outrun a single server without any data center behind it.",
+  summary:[
+    "Model file distribution with a server upload rate us, N peers each with upload rate ui and download rate di, and a file of size F. Under client-server distribution, the server alone must push out a full copy to every peer, so distribution time is bounded below by NF/us — growing linearly, without bound, as N grows. A thousand-fold increase in peers means a thousand-fold increase in distribution time.",
+    "Under P2P distribution, peers redistribute chunks to each other as they receive them, so the effective upload capacity of the whole system is us plus the sum of every peer's own ui. Distribution time is bounded below by the largest of three quantities — F/us (the server must inject every bit at least once), F/dmin (the slowest downloader still needs the whole file), and NF/(us + Σui) (the system-wide capacity constraint) — and unlike client-server, this bound stays flat as N grows, because each new peer brings its own upload capacity along with its demand. That's self-scalability.",
+    "BitTorrent is the P2P protocol that puts this into practice. A torrent is the set of peers sharing a file, tracked by a tracker that hands a new peer a random subset of the swarm to connect to. Peers trade fixed-size chunks, using rarest first to prioritize requesting whichever chunks are least replicated among their neighbors — spreading scarce chunks through the swarm fastest, exactly when they're most valuable.",
+    "Which neighbors get served is governed by tit-for-tat: every peer measures who's currently feeding it data fastest, reciprocates to its top four (unchoked) neighbors, and every 30 seconds also optimistically unchokes one random neighbor — giving new arrivals with nothing to trade a way in, and letting better-matched trading pairs discover each other over time. The same self-scalability principle shows up more generally in distributed hash tables (DHTs), a simple database whose records are spread across the peers themselves."
+  ],
+  formulas:[
+    {e:"D_cs = max( NF/u_s, F/d_min )", n:"client-server: grows linearly with N — the server's upload link alone must serve every peer"},
+    {e:"D_p2p = max( F/u_s, F/d_min, NF/(u_s + Σu_i) )", n:"P2P: bounded by total system upload capacity, which grows as peers join — self-scaling"}
+  ],
+  concepts:[
+    {t:"Self-scalability", d:"Each peer adds both demand (it wants the file) and supply (it can upload chunks to others), so P2P capacity grows roughly in step with load."},
+    {t:"Torrent / tracker", d:"A torrent is the swarm sharing one file; the tracker is the infrastructure node that introduces new peers to a random subset of the swarm."},
+    {t:"Rarest first", d:"Request the least-replicated chunks among your neighbors first, so scarce chunks spread through the swarm fastest."},
+    {t:"Tit-for-tat / (un)choking", d:"Reciprocate with the four neighbors currently sending you data fastest (unchoked); everyone else is choked and gets nothing."},
+    {t:"Optimistic unchoke", d:"Every 30 seconds, one random neighbor is served regardless of trade history — lets new peers and better matches get discovered."},
+    {t:"Distributed hash table (DHT)", d:"A simple key-value database with records spread across peers rather than held centrally — another self-scaling P2P pattern."}
+  ],
+  practice:"Tit-for-tat is also BitTorrent's defense against free-riding: a peer that never uploads never becomes anyone's top-four choice and gets served only through the occasional optimistic unchoke. The book is blunt about the stakes — without something like this incentive scheme, BitTorrent's swarms would likely have collapsed into mostly free-riders and the ecosystem wouldn't exist at its current scale."
+},
+{
+  hop:"2.6", short:"Video & CDNs",
+  label:"Section 2.6", title:"Video Streaming and Content Distribution Networks",
+  idea:"Streaming video is ordinary HTTP GET at heart — a file fetched in chunks — but a single origin server can't push multi-Mbps streams to millions of concurrent viewers worldwide, so the real engineering is adaptive bitrate chunking (DASH) paired with getting a copy of the content physically close to every viewer (a CDN).",
+  summary:[
+    "Video is compressible, and that compressibility is the whole ballgame: the same content can be encoded at 300 Kbps or 4+ Mbps, trading quality for bit rate, and the single most important performance metric for streaming is average end-to-end throughput — the network has to sustain at least the compressed bit rate or playback stalls.",
+    "Plain HTTP streaming just serves the video file as-is; every client gets the same encoding regardless of its actual available bandwidth. DASH (Dynamic Adaptive Streaming over HTTP) fixes this by encoding several versions of the same video at different bit rates, publishing a manifest file listing a URL per version, and letting the client request one small chunk at a time — measuring its own recently received throughput and picking a higher- or lower-bitrate chunk for the next request accordingly. All of the adaptation logic lives on the client; the server just serves whichever chunk it's asked for.",
+    "A single data center serving all this content directly has three problems: distant clients cross many links and ISPs, any one of which can bottleneck the stream; popular content gets sent redundantly over the same links again and again, wasting bandwidth the provider pays for; and the data center itself is a single point of failure. CDNs solve this by replicating content across many geographically distributed clusters and directing each request to a good one — enter-deep placement (Akamai's approach) pushes clusters deep into access ISPs for minimum latency at the cost of managing thousands of small sites; bring-home placement (Limelight's approach) builds fewer, larger clusters at Internet Exchange Points, trading a bit of latency for simpler operations.",
+    "Most CDNs intercept and redirect requests through DNS: a content provider's authoritative server hands off a query to the CDN's own DNS infrastructure, which resolves it to whichever cluster the CDN judges best for that client at that moment, typically balancing geographic or network proximity against real-time load. Netflix and YouTube take different approaches even though both use private CDNs — Netflix pushes its whole catalog to CDN servers during off-peak hours and tells clients which server to use directly from the Amazon-cloud-hosted control plane, skipping DNS redirect entirely, while YouTube uses pull caching and DNS redirect much like a third-party CDN would, generally steering clients to the cluster with the lowest measured RTT."
+  ],
+  concepts:[
+    {t:"DASH", d:"Dynamic Adaptive Streaming over HTTP — multiple bitrate versions, one manifest file, client-driven chunk-by-chunk quality selection based on measured throughput."},
+    {t:"Manifest file", d:"Lists the URL and bit rate for every available version of a video; the client's rate-determination algorithm consults it before each chunk request."},
+    {t:"CDN placement: enter-deep vs. bring-home", d:"Enter-deep pushes many small clusters into access ISPs (Akamai); bring-home builds fewer, larger clusters at IXPs (Limelight) — a latency/complexity tradeoff."},
+    {t:"Pull vs. push caching", d:"Pull: a cluster fetches and stores content on first request, like a Web cache (YouTube). Push: content is proactively distributed to clusters ahead of demand, often off-peak (Netflix)."},
+    {t:"Cluster selection strategy", d:"How a CDN picks which server cluster answers a given request — geographic proximity, measured RTT, or real-time load balancing."},
+  ],
+  practice:"Netflix and YouTube make an instructive contrast precisely because they solve the same problem differently: Netflix's private CDN is video-only, so it can skip DNS redirect and push content off-peak; YouTube's serves far more heterogeneous content within Google's broader infrastructure (the same one that also serves Search and Gmail from separate mega data centers and enter-deep clusters), so pull caching and DNS-based redirection fit its needs better."
+},
+{
+  hop:"2.7", short:"Sockets",
+  label:"Section 2.7", title:"Socket Programming: Creating Network Applications",
+  idea:"A socket is the one seam an application developer actually owns — everything past it, routing, retransmission, congestion control, belongs to the operating system and the transport layer — which is why a working UDP client-server pair and a working TCP client-server pair for the exact same task differ by only a handful of lines of code.",
+  summary:[
+    "With UDP, there's no handshake: the sender attaches a destination IP address and port to every single packet with sendto(), and the receiver pulls both the data and the sender's return address off the wire with recvfrom(). Because UDP is connectionless, a UDP client can technically be started before its server exists — the packet just won't arrive until the server is listening.",
+    "TCP is different because it's connection-oriented. The server creates a welcoming socket with bind() and listen(), then blocks on accept(), which returns a brand-new connection socket dedicated to whichever client just completed the three-way handshake via connect(). The welcoming socket stays open, ready for the next client, while the connection socket is the actual pipe for this one client's bytes — which is exactly why a TCP server needs one socket per simultaneous client while a UDP server gets by with just one socket total, ever.",
+    "The book's worked example — a client reads a line of keyboard input, a server capitalizes it and sends it back — makes the transport-protocol difference concrete: same task, same overall shape, but the UDP version explicitly attaches an address to every send, and the TCP version establishes a connection once and then just reads and writes an ordinary byte stream.",
+    "Choosing a transport protocol at all is one of the first real decisions in building any application — RFC-defined ('open') protocols like HTTP must use TCP because the standard says so, but a proprietary application is free to pick UDP for low-overhead, loss-tolerant traffic or TCP for guaranteed, in-order delivery, provided it avoids stepping on any well-known port number already claimed by a standard protocol."
+  ],
+  concepts:[
+    {t:"Welcoming vs. connection socket", d:"TCP server-side split: the welcoming socket (from bind()/listen()) only ever accepts new connections; each client gets its own dedicated connection socket from accept()."},
+    {t:"bind() / listen() / accept() / connect()", d:"Server: bind assigns a port, listen queues incoming requests, accept blocks until a handshake completes. Client: connect initiates the three-way handshake."},
+    {t:"sendto()/recvfrom() vs. send()/recv()", d:"UDP explicitly attaches a destination address to every packet sent and reads a sender's return address off every packet received; TCP just reads and writes an ordinary byte stream once connected."},
+    {t:"Well-known port numbers", d:"Fixed ports (80 for HTTP, 25 for SMTP, 53 for DNS) that let a client find a standard server without prior coordination; proprietary apps must avoid them."},
+    {t:"SOCK_DGRAM vs. SOCK_STREAM", d:"The socket-type flag that selects UDP (datagram, connectionless) or TCP (stream, connection-oriented) when a socket is created."}
+  ],
+  practice:"The one-socket-vs-many-sockets distinction isn't just a coding detail — it's the direct, hands-on version of the connection-oriented service model described back in Section 2.1: TCP's per-client connection socket is what lets the operating system track state (sequence numbers, buffers, congestion windows) separately for every peer a server talks to, which UDP, having no connections at all, simply never needs to do."
+},
+{
+  hop:"2.8", short:"Summary",
+  label:"Section 2.8", title:"Summary",
+  idea:"Chapter 1 defined a protocol abstractly as message format, order, and rules for action; Chapter 2 gave that definition substance by walking through HTTP, SMTP, and DNS in enough detail to write working client and server code against them — and left the how of TCP's and UDP's own guarantees as the open question the next chapter exists to answer.",
+  summary:[
+    "The chapter's throughline is architecture before protocol: client-server versus P2P as competing ways to structure an application, and TCP versus UDP as competing transport-service contracts an application-layer protocol builds on top of. Every application studied — the Web, e-mail, DNS, file sharing, video — is really a particular answer to both questions at once.",
+    "We now know what TCP and UDP promise (connection-oriented and reliable versus connectionless and unreliable) without yet knowing how either one actually delivers on that promise — how TCP detects loss, retransmits, and controls congestion is deliberately left open, because that's the entire subject of the transport layer chapter that follows.",
+    "There's also a visible shift in delivery strategy as scale pressure increases: the Web, e-mail, and DNS lean on pure client-server with caching bolted on; file distribution and video streaming, facing genuinely massive concurrent demand, reach for P2P self-scalability and CDN geographic replication instead. Different scale, different architecture — the same tradeoff surfaces in different clothes each time.",
+    "The chapter closes the loop that opened it: sockets are the interface everything else in the chapter — HTTP requests, SMTP handshakes, DNS queries, BitTorrent chunk trades — ultimately reduces to, which is exactly why Section 2.7's short client-server programs are able to stand in for the whole chapter's worth of protocols."
+  ],
+  roadmap:[
+    {c:"HTTP", t:"Web", d:"TCP"},
+    {c:"SMTP", t:"E-mail (server↔server)", d:"TCP"},
+    {c:"IMAP", t:"E-mail (client pull)", d:"TCP"},
+    {c:"DNS", t:"Directory service", d:"UDP"},
+    {c:"BitTorrent", t:"P2P file sharing", d:"TCP"},
+    {c:"DASH / proprietary", t:"Video streaming", d:"TCP"}
+  ],
+  practice:"Chapter 3 picks up exactly where this one draws a line: it opens the transport layer itself and asks how TCP actually achieves reliable, in-order, congestion-aware delivery — the mechanism this chapter was content to take on faith every time it said 'TCP guarantees…'."
+}
+];
+
+const rail = document.getElementById("rail");
+const panels = document.getElementById("panels");
+let current = 0;
+
+sections.forEach((s, i) => {
+  const b = document.createElement("button");
+  b.className = "hop";
+  b.type = "button";
+  b.innerHTML = `<span class="dot"></span><span class="num">${s.hop}</span><span class="lbl">${s.short}</span>`;
+  b.addEventListener("click", () => goTo(i));
+  rail.appendChild(b);
+
+  const p = document.createElement("section");
+  p.className = "panel";
+
+  let html = `
+    <div class="sec-head">
+      <div class="sec-numeral" aria-hidden="true">${s.hop}</div>
+      <p class="sec-label">${s.label}</p>
+      <h2 class="sec-title">${s.title}</h2>
+    </div>
+    <div class="idea"><span class="idea-tag">Central idea</span>${s.idea}</div>
+    <h3 class="block">Summary</h3>
+    <div class="summary">${s.summary.map(x => `<p>${x}</p>`).join("")}</div>`;
+
+  if (s.formulas) {
+    html += `<h3 class="block">Formulas worth keeping</h3>
+      <div class="formulas">${s.formulas.map(f => `<div class="formula"><code>${f.e}</code><span>${f.n}</span></div>`).join("")}</div>`;
+  }
+  if (s.concepts) {
+    html += `<h3 class="block">Key concepts</h3>
+      <ul class="concepts">${s.concepts.map(c => `<li><span class="term">${c.t}</span><span class="def">${c.d || ""}</span></li>`).join("")}</ul>`;
+  }
+  if (s.roadmap) {
+    html += `<h3 class="block">The protocols at a glance</h3>
+      <ul class="roadmap">${s.roadmap.map(r => `<li><span class="ch">${r.c}</span><span><span class="t">${r.t}</span> — <span class="d">${r.d}</span></span></li>`).join("")}</ul>`;
+  }
+  if (s.practice) {
+    html += `<h3 class="block">Why it matters</h3>
+      <div class="practice"><span class="p-tag">In practice</span><p>${s.practice}</p></div>`;
+  }
+
+  html += `
+    <div class="pager">
+      <button type="button" data-dir="-1">← ${i > 0 ? sections[i-1].hop + " " + sections[i-1].short : "Start"}</button>
+      <span class="pos">${String(i+1).padStart(2,"0")} / ${String(sections.length).padStart(2,"0")}</span>
+      <button type="button" data-dir="1">${i < sections.length-1 ? sections[i+1].hop + " " + sections[i+1].short + " →" : "End"}</button>
+    </div>`;
+
+  p.innerHTML = html;
+  p.querySelectorAll(".pager button").forEach(btn => {
+    const dir = parseInt(btn.dataset.dir, 10);
+    const target = i + dir;
+    if (target < 0 || target >= sections.length) { btn.disabled = true; }
+    else { btn.addEventListener("click", () => goTo(target)); }
+  });
+  panels.appendChild(p);
+});
+
+const hops = document.querySelectorAll(".hop");
+const allPanels = document.querySelectorAll(".panel");
+
+function goTo(idx) {
+  current = Math.max(0, Math.min(sections.length - 1, idx));
+  hops.forEach((h, i) => h.classList.toggle("active", i === current));
+  allPanels.forEach((p, i) => p.classList.toggle("active", i === current));
+  hops[current].scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  if (e.key === "ArrowRight") goTo(current + 1);
+  if (e.key === "ArrowLeft") goTo(current - 1);
+});
+
+/* ---------- theme ---------- */
+const themeBtn = document.getElementById("themeBtn");
+let isDark = true;
+
+function readStoredTheme() {
+  try { return localStorage.getItem("cn-theme"); } catch (e) { return null; }
+}
+function storeTheme(v) {
+  try { localStorage.setItem("cn-theme", v); } catch (e) {}
+}
+function applyTheme(dark) {
+  isDark = dark;
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  themeBtn.textContent = dark ? "☀ Light" : "☾ Dark";
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+}
+
+const stored = readStoredTheme();
+const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+applyTheme(stored ? stored === "dark" : !prefersLight);
+
+themeBtn.addEventListener("click", () => {
+  applyTheme(!isDark);
+  storeTheme(isDark ? "dark" : "light");
+});
+
+goTo(0);
+</script>
+</body>
+</html>
